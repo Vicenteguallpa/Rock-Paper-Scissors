@@ -9,7 +9,12 @@ const SCISSORS = "scissors";
 const SCISSORS_CAP = "Scissors";
 const SCISSORS_NUM = 2;
 
-// Returns the capitalized version of "Rock", "Paper", or "Scissors"
+/**
+ * Returns the capitalized version of "Rock", "Paper", or "Scissors"
+ * 
+ * @param {Number} selection 
+ * @returns {String} 
+ */
 function getSelectionCap(selection) {
     if (selection == ROCK_NUM) {
         return ROCK_CAP;
@@ -22,7 +27,12 @@ function getSelectionCap(selection) {
     }
 }
 
-// Returns the number associated with "Rock", "Paper", or "Scissors"
+/**
+ * Returns the number associated with "Rock", "Paper", or "Scissors"
+ * 
+ * @param {String} selection 
+ * @returns {Number}
+ */
 function getSelectionNum(selection) {
     selection = selection.toLowerCase();
     if (selection == ROCK) {
@@ -36,7 +46,12 @@ function getSelectionNum(selection) {
     }
 }
 
-// Returns the string associated with "Rock", "Paper", or "Scissors"
+/**
+ * Returns the string associated with "Rock", "Paper", or "Scissors"
+ * 
+ * @param {Number} selection 
+ * @returns {String}
+ */
 function getSelectionStr(selection) {
     if (selection == ROCK_NUM) {
         return ROCK;
@@ -49,15 +64,33 @@ function getSelectionStr(selection) {
     }
 }
 
-// Randomly return either ‘Rock’, ‘Paper’ or ‘Scissors’
+/**
+ * Computer makes its selection
+ * Randomly return either ‘Rock’, ‘Paper’ or ‘Scissors’
+ * 
+ * @returns{String}
+ */
 function computerPlay() {
     // get a random integer between 0 and 2
     var selection = Math.floor(Math.random() * 3);
     return getSelectionStr(selection);
 }    
 
-// Return game result string based on selections
-function getResultStr(playerNum, playerSelectionCap, computerNum, computerSelectionCap) {
+/**
+ * Plays a single round of Rock Paper Scissors
+ * Check values of player and computer selections and
+ * return the result of the round
+ * 
+ * @param {String} playerSelection 
+ * @param {String} computerSelection 
+ * @returns {String}
+ */
+function playRound(playerSelection, computerSelection) {
+    // Get the associated capitalized selection and number
+    var playerNum = getSelectionNum(playerSelection);
+    var playerSelectionCap = getSelectionCap(playerNum);
+    var computerNum = getSelectionNum(computerSelection);
+    var computerSelectionCap = getSelectionCap(computerNum);
     if (playerNum == computerNum) {
         return "You Tie this round! " + playerSelectionCap + " ties " + computerSelectionCap;
     } else if (
@@ -72,18 +105,7 @@ function getResultStr(playerNum, playerSelectionCap, computerNum, computerSelect
             return "You Lose this round! " + computerSelectionCap + " beats " + playerSelectionCap;
     } else {
         // error
-    }
-}
-
-// Plays a single round of Rock Paper Scissors
-function playRound(playerSelection, computerSelection) {
-    // Get the associated capitalized selection and number
-    var playerNum = getSelectionNum(playerSelection);
-    var playerSelectionCap = getSelectionCap(playerNum);
-    var computerNum = getSelectionNum(computerSelection);
-    var computerSelectionCap = getSelectionCap(computerNum);
-    // Check results
-    return getResultStr(playerNum, playerSelectionCap, computerNum, computerSelectionCap);     
+    }     
 }
 
 // Test
@@ -93,7 +115,13 @@ const computerSelection = computerPlay();
 console.log(playRound(playerSelection, computerSelection));
 */
 
-// Check that selection is valid. Returns true if valid
+/**
+ * Check that the selection is any variation of 'Rock'
+ * 'Paper' or 'Scissors'
+ * 
+ * @param {String} selection 
+ * @returns {Boolean}
+ */
 function isValidSelection(selection) {
     if (selection == null) {
         return false;
@@ -102,7 +130,12 @@ function isValidSelection(selection) {
     return (selectionNum == ROCK_NUM) || (selectionNum == PAPER_NUM) || (selectionNum == SCISSORS_NUM);
 }
 
-// Return string move the beats computer selection
+/**
+ * Return a selection that beats the input selection
+ * 
+ * @param {String} selection 
+ * @returns {String}
+ */
 function cheat(selection) {
     selection = selection.toLowerCase();
     if (selection == ROCK) {
@@ -116,7 +149,13 @@ function cheat(selection) {
     }
 }
 
-// Get the final result
+/**
+ * Get the final result of the game
+ * 
+ * @param {Number} playerScore 
+ * @param {Number} computerScore 
+ * @returns {String}
+ */
 function getGameResult(playerScore, computerScore) {
     if (playerScore == computerScore) {
         return "You Tie the Game!";
@@ -130,6 +169,15 @@ function getGameResult(playerScore, computerScore) {
 }
 
 // simulate the game with a real player asked for inputs
+/**
+ * Play a game of a given input number of rounds where the
+ * user is prompted for their selection. If their selection
+ * is invalid (i.e not rock, paper, or scissors), we prompt 
+ * them again. Results of each round and full game is 
+ * printed to console.
+ * 
+ * @param {Number} maxRounds 
+ */
 function game(maxRounds) {
     console.log("Welcome to Rock Paper Scissors! You will be playing for " + maxRounds + " rounds!");
     var playerScore = 0;
@@ -171,10 +219,19 @@ var cScore = 0;
 var roundsPlayed = 0;
 const maxRounds = 5;
 
+/**
+ * Update the score on the respective div element
+ */
 function updateScoreBoard() {
     scoreBoard.innerHTML = "You: " + pScore + ", Computer: " + cScore;
 }
 
+/**
+ * Update the score and scoreboard of the player and 
+ * computer based on the result
+ * 
+ * @param {String} result 
+ */
 function updateScore(result) {
     if (result.startsWith("You W")) {
         pScore++;
@@ -183,8 +240,10 @@ function updateScore(result) {
     } else {
         // tie or error
     }
+    updateScoreBoard();
 }
 
+// reset all scores and respective div elements
 resetButton.addEventListener("click", (e) => {
     pScore = 0;
     cScore = 0;
@@ -194,6 +253,11 @@ resetButton.addEventListener("click", (e) => {
     gameResult.innerHTML = "";
 });
 
+/* For each button we add a listener that, when
+   trigered, plays a round of the game. Once
+   we reach the maximum number of rounds we 
+   display the results
+ */
 for (var i = 0; i < buttons.length; i++) {
     var button = buttons.item(i);
     // when button is clicked, play a round
@@ -201,10 +265,11 @@ for (var i = 0; i < buttons.length; i++) {
         if (roundsPlayed < maxRounds) {
             var computerSelection = computerPlay();
             var playerSelection = e.target.dataset.selection;
+            // uncomment the code below to always beat the computer!
+            // playerSelection = cheat(computerSelection);
             var result = playRound(playerSelection, computerSelection);
             roundResult.innerHTML = result;
             updateScore(result);
-            updateScoreBoard();
             roundsPlayed++;
             if (roundsPlayed == maxRounds) {
                 gameResult.innerHTML = getGameResult(pScore, cScore);
